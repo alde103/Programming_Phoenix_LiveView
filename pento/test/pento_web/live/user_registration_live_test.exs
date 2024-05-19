@@ -41,14 +41,16 @@ defmodule PentoWeb.UserRegistrationLiveTest do
       {:ok, lv, _html} = live(conn, ~p"/users/register")
 
       email = unique_user_email()
-      form = form(lv, "#registration_form", user: valid_user_attributes(email: email))
+      user  = valid_user_attributes(email: email)
+      form = form(lv, "#registration_form", user: Map.put(user, :confirm_password, user[:password]))
+
       render_submit(form)
       conn = follow_trigger_action(form, conn)
 
       assert redirected_to(conn) == ~p"/"
 
       # Now do a logged in request and assert on the menu
-      conn = get(conn, "/")
+      conn = get(conn, "/guess")
       response = html_response(conn, 200)
       assert response =~ email
       assert response =~ "Settings"
@@ -63,11 +65,23 @@ defmodule PentoWeb.UserRegistrationLiveTest do
       result =
         lv
         |> form("#registration_form",
-          user: %{"email" => user.email, "password" => "valid_password"}
+          user: %{"email" => user.email, "user_name" => "valid_username",  "password" => "valid_password", "confirm_password" => "valid_password"}
         )
         |> render_submit()
 
       assert result =~ "has already been taken"
+    end
+
+    test "renders errors a for a unmattching confirm password", %{conn: conn} do
+      {:ok, lv, _html} = live(conn, ~p"/users/register")
+
+      email = unique_user_email()
+      user  = valid_user_attributes(email: email)
+      form = form(lv, "#registration_form", user: Map.put(user, :confirm_password, "wrong_confirm_password"))
+
+      html = render_submit(form)
+      assert html =~ "Oops, something went wrong!"
+      assert html =~ "Password and Confirm Password doesn&#39;t match."
     end
   end
 
