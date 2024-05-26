@@ -1,11 +1,24 @@
-<.header>
+<.header class={"bold"}>
+  <:subtitle>
+  <%!-- This demostrate that the order is define by the function component --%>
+  This is the subtitle
+  </:subtitle>
+  
   Listing Products
+  
+  <h1 class="text-2xl font-bold"><%= @greeting %></h1>
+  
+  This is not the  subtitle
+  
   <:actions>
     <.link patch={~p"/products/new"}>
       <.button>New Product</.button>
     </.link>
   </:actions>
 </.header>
+
+<%!-- For debugging --%>
+<%!-- <pre><%= inspect assigns, pretty: true %></pre> --%>
 
 <.table
   id="products"

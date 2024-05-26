@@ -2,6 +2,7 @@ defmodule PentoWeb.ProductLive.Show do
   use PentoWeb, :live_view
 
   alias Pento.Catalog
+  require Logger
 
   @impl true
   def mount(_params, _session, socket) do
@@ -14,6 +15,11 @@ defmodule PentoWeb.ProductLive.Show do
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
      |> assign(:product, Catalog.get_product!(id))}
+  end
+
+  def handle_info({PentoWeb.ProductLive.FormComponent, {:saved, product}}, socket) do
+    Logger.info("Product #{inspect(product)} successfully saved")
+    {:noreply, socket}
   end
 
   defp page_title(:show), do: "Show Product"
