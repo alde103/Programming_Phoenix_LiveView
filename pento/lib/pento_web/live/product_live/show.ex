@@ -17,6 +17,7 @@ defmodule PentoWeb.ProductLive.Show do
      |> assign(:product, Catalog.get_product!(id))}
   end
 
+  @impl true
   def handle_info({PentoWeb.ProductLive.FormComponent, {:saved, product}}, socket) do
     Logger.info("Product #{inspect(product)} successfully saved")
     {:noreply, socket}
