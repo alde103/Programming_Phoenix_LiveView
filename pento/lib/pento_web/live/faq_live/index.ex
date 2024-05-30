@@ -16,19 +16,19 @@ defmodule PentoWeb.FAQLive.Index do
 
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
-    |> assign(:page_title, "Edit Faq")
+    |> assign(:page_title, "Edit FAQ")
     |> assign(:faq, Questions.get_faq!(id))
   end
 
   defp apply_action(socket, :new, _params) do
     socket
-    |> assign(:page_title, "New Faq")
+    |> assign(:page_title, "New FAQ")
     |> assign(:faq, %FAQ{})
   end
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "Listing Faqs")
+    |> assign(:page_title, "Listing FAQs")
     |> assign(:faq, nil)
   end
 

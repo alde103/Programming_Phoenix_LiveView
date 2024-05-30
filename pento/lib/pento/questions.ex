@@ -5,7 +5,7 @@ defmodule Pento.Questions do
 
   import Ecto.Query, warn: false
   alias Pento.Repo
-
+  alias Pento.Questions.Answer
   alias Pento.Questions.FAQ
 
   @doc """
@@ -36,6 +36,27 @@ defmodule Pento.Questions do
 
   """
   def get_faq!(id), do: Repo.get!(FAQ, id)
+
+  @doc """
+  Gets a single faq with answers.
+
+  Raises `Ecto.NoResultsError` if the Faq does not exist.
+
+  ## Examples
+
+      iex> get_faq!(123)
+      %FAQ{}
+
+      iex> get_faq!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_faq_with_answer!(id) do
+    FAQ
+    |> Repo.get!(id)
+    |> Repo.preload(answers: from(a in Answer, order_by: [desc: a.inserted_at]))
+    |> Repo.preload(answers: [:user])
+  end
 
   @doc """
   Creates a faq.
@@ -102,8 +123,6 @@ defmodule Pento.Questions do
     FAQ.changeset(faq, attrs)
   end
 
-  alias Pento.Questions.Answer
-
   @doc """
   Returns the list of answer.
 
@@ -132,6 +151,25 @@ defmodule Pento.Questions do
 
   """
   def get_answer!(id), do: Repo.get!(Answer, id)
+
+  @doc """
+  Gets answers based on the FAQ.
+
+  Raises `Ecto.NoResultsError` if the Answer does not exist.
+
+  ## Examples
+
+      iex> get_answer!(123)
+      [%Answer{}]
+
+      iex> get_answer!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_all_answers_by_faq_id(faq_id) do
+    from(a in Answer, where: a.faq_id == ^faq_id, order_by: [desc: a.votes])
+    |> Repo.all()
+  end
 
   @doc """
   Creates a answer.
