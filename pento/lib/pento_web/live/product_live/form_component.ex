@@ -38,10 +38,14 @@ defmodule PentoWeb.ProductLive.FormComponent do
         <div class="mt-4">
           <.live_img_preview entry={image} width="60" />
         </div>
+
         <progress value={image.progress} max="100" />
+
         <%= for err <- upload_errors(@uploads.image, image) do %>
           <.error><%= err %></.error>
         <% end %>
+
+        <button phx-click="cancel-upload" phx-target={@myself} phx-value-ref={image.ref}> Cancel</button>
       <% end %>
     </div>
     """
@@ -73,25 +77,14 @@ defmodule PentoWeb.ProductLive.FormComponent do
     {:noreply, assign_form(socket, changeset)}
   end
 
+  @impl true
   def handle_event("save", %{"product" => product_params}, socket) do
     save_product(socket, socket.assigns.action, product_params)
   end
 
-  def params_with_image(socket, params) do
-    path =
-      socket
-      |> consume_uploaded_entries(:image, &upload_static_file/2)
-      |> List.first()
-
-    Map.put(params, "image_upload", path)
-  end
-
-  defp upload_static_file(%{path: path}, _entry) do
-    # Plug in your production image file persistence implementation here!
-    filename = Path.basename(path)
-    dest = Path.join("priv/static/images", filename)
-    File.cp!(path, dest)
-    {:ok, ~p"/images/#{filename}"}
+  @impl true
+  def handle_event("cancel-upload", %{"ref" => ref}, socket) do
+    {:noreply, cancel_upload(socket, :image, ref)}
   end
 
   defp save_product(socket, :edit, product_params) do
@@ -133,4 +126,21 @@ defmodule PentoWeb.ProductLive.FormComponent do
   end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
+
+  defp params_with_image(socket, params) do
+    path =
+      socket
+      |> consume_uploaded_entries(:image, &upload_static_file/2)
+      |> List.first()
+
+    Map.put(params, "image_upload", path)
+  end
+
+  defp upload_static_file(%{path: path}, _entry) do
+    # Plug in your production image file persistence implementation here!
+    filename = Path.basename(path)
+    dest = Path.join("priv/static/images", filename)
+    File.cp!(path, dest)
+    {:ok, ~p"/images/#{filename}"}
+  end
 end
