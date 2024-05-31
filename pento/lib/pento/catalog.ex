@@ -38,6 +38,31 @@ defmodule Pento.Catalog do
   def get_product!(id), do: Repo.get!(Product, id)
 
   @doc """
+  Gets a single product based on its sku.
+
+  Raises `Ecto.NoResultsError` if the Product does not exist.
+
+  ## Examples
+
+      iex> get_product_by_sku(123)
+      %Product{}
+
+      iex> get_product_by_sku(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_product_by_sku(sku) do
+    with query <- from(p in Product, where: p.sku == ^sku),
+         product <- Repo.one(query),
+         false <- is_nil(product) do
+      {:ok, product}
+    else
+      _error ->
+        :error
+    end
+  end
+
+  @doc """
   Creates a product.
 
   ## Examples

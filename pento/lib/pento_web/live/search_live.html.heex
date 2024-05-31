@@ -1,0 +1,33 @@
+<.header class="bold">
+  <h1 class="text-2xl font-bold">Search for a Product.</h1>
+
+  <:subtitle>
+    <%!-- This demostrate that the order is define by the function component --%> by SKU
+  </:subtitle>
+</.header>
+
+<.live_component
+  module={PentoWeb.SearchLive.FormComponent}
+  id={:search}
+  action={@live_action}
+  search={@search}
+/>
+
+<%= if @product != [] do %>
+  <.table
+    id="product"
+    rows={@product}
+    row_click={fn product -> JS.navigate(~p"/products/#{product}") end}
+  >
+    <:col :let={product} label="Name"><%= product.name %></:col>
+    <:col :let={product} label="Description"><%= product.description %></:col>
+    <:col :let={product} label="Unit price"><%= product.unit_price %></:col>
+    <:col :let={product} label="Sku"><%= product.sku %></:col>
+    <:action :let={product}>
+      <div class="sr-only">
+        <.link navigate={~p"/products/#{product}"}>Show</.link>
+      </div>
+      <.link patch={~p"/products/#{product}/edit"}>Edit</.link>
+    </:action>
+  </.table>
+<% end %>
