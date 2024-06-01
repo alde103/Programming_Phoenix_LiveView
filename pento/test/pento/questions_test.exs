@@ -75,7 +75,7 @@ defmodule Pento.QuestionsTest do
     end
 
     test "create_answer/1 with valid data creates a answer" do
-      valid_attrs = %{answer: "some answer", votes: 42}
+      valid_attrs = %{answer: "some answer", votes: 42, faq_id: faq_fixture().id}
 
       assert {:ok, %Answer{} = answer} = Questions.create_answer(valid_attrs)
       assert answer.answer == "some answer"

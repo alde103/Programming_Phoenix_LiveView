@@ -4,6 +4,8 @@ defmodule Pento.QuestionsFixtures do
   entities via the `Pento.Questions` context.
   """
 
+  import Pento.{AccountsFixtures}
+
   @doc """
   Generate a faq.
   """
@@ -26,7 +28,9 @@ defmodule Pento.QuestionsFixtures do
       attrs
       |> Enum.into(%{
         answer: "some answer",
-        votes: 42
+        votes: 42,
+        faq_id: faq_fixture().id,
+        user_id: user_fixture().id,
       })
       |> Pento.Questions.create_answer()
 

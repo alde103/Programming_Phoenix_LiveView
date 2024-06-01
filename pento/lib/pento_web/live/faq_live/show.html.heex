@@ -3,7 +3,7 @@
   <:subtitle><%= @faq.question %></:subtitle>
   <:actions>
     <.link patch={~p"/faqs/#{@faq}/show/edit"} phx-click={JS.push_focus()}>
-      <.button>Edit faq</.button>
+      <.button>Edit FAQ</.button>
     </.link>
     <.link patch={~p"/faqs/#{@faq}/answer/new"} phx-click={JS.push_focus()}>
       <.button>Respond</.button>

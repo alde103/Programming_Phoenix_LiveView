@@ -4,7 +4,6 @@ defmodule PentoWeb.FAQLiveTest do
   import Phoenix.LiveViewTest
   import Pento.QuestionsFixtures
 
-  @create_attrs %{question: "some question"}
   @update_attrs %{question: "some updated question"}
   @invalid_attrs %{question: nil}
 
@@ -14,7 +13,7 @@ defmodule PentoWeb.FAQLiveTest do
   end
 
   describe "Index" do
-    setup [:create_faq]
+    setup [:create_faq, :register_and_log_in_user]
 
     test "lists all faqs", %{conn: conn, faq: faq} do
       {:ok, _index_live, html} = live(conn, ~p"/faqs")
@@ -35,8 +34,10 @@ defmodule PentoWeb.FAQLiveTest do
              |> form("#faq-form", faq: @invalid_attrs)
              |> render_change() =~ "can&#39;t be blank"
 
+      create_attrs = %{question: "some question 2"}
+
       assert index_live
-             |> form("#faq-form", faq: @create_attrs)
+             |> form("#faq-form", faq: create_attrs)
              |> render_submit()
 
       assert_patch(index_live, ~p"/faqs")
@@ -50,7 +51,7 @@ defmodule PentoWeb.FAQLiveTest do
       {:ok, index_live, _html} = live(conn, ~p"/faqs")
 
       assert index_live |> element("#faqs-#{faq.id} a", "Edit") |> render_click() =~
-               "Edit Faq"
+               "Edit FAQ"
 
       assert_patch(index_live, ~p"/faqs/#{faq}/edit")
 
@@ -78,7 +79,7 @@ defmodule PentoWeb.FAQLiveTest do
   end
 
   describe "Show" do
-    setup [:create_faq]
+    setup [:create_faq, :register_and_log_in_user]
 
     test "displays faq", %{conn: conn, faq: faq} do
       {:ok, _show_live, html} = live(conn, ~p"/faqs/#{faq}")
@@ -91,7 +92,7 @@ defmodule PentoWeb.FAQLiveTest do
       {:ok, show_live, _html} = live(conn, ~p"/faqs/#{faq}")
 
       assert show_live |> element("a", "Edit") |> render_click() =~
-               "Edit Faq"
+               "Edit FAQ"
 
       assert_patch(show_live, ~p"/faqs/#{faq}/show/edit")
 
