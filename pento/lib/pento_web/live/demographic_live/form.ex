@@ -18,6 +18,11 @@ defmodule PentoWeb.DemographicLive.Form do
     {:noreply, save_demographic(socket, params)}
   end
 
+  def handle_event("validate", %{"demographic" => demographic_params}, socket) do
+    params = params_with_user_id(demographic_params, socket)
+    {:noreply, validate_demographic(socket, params)}
+  end
+
   def params_with_user_id(params, %{assigns: %{current_user: current_user}}) do
     params
     |> Map.put("user_id", current_user.id)
@@ -33,6 +38,15 @@ defmodule PentoWeb.DemographicLive.Form do
 
   defp clear_form(%{assigns: %{demographic: demographic}} = socket) do
     assign_form(socket, Survey.change_demographic(demographic))
+  end
+
+  defp validate_demographic(socket, demographic_params) do
+    changeset =
+      socket.assigns.demographic
+      |> Survey.change_demographic(demographic_params)
+      |> Map.put(:action, :validate)
+
+    assign_form(socket, changeset)
   end
 
   defp save_demographic(socket, demographic_params) do

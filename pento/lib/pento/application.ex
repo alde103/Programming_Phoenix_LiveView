@@ -14,6 +14,7 @@ defmodule Pento.Application do
       {Phoenix.PubSub, name: Pento.PubSub},
       # Start the Finch HTTP client for sending emails
       {Finch, name: Pento.Finch},
+      PentoWeb.Presence,
       # Start a worker by calling: Pento.Worker.start_link(arg)
       # {Pento.Worker, arg},
       # Start to serve requests, typically the last entry
