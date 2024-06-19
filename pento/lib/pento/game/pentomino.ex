@@ -1,6 +1,6 @@
 defmodule Pento.Game.Pentomino do
-  alias Pento.Game.Shape
-  @names [:i, :l, :y, :n, :p, :w, :u, :v, :s, :f, :x, :t]
+  alias Pento.Game.{Shape, Point}
+  #@names [:i, :l, :y, :n, :p, :w, :u, :v, :s, :f, :x, :t]
   @default_location {8, 8}
   defstruct name: :i,
             rotation: 0,

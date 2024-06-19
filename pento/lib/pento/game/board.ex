@@ -37,7 +37,6 @@ defmodule Pento.Game.Board do
   def active?(board, shape_name) when is_binary(shape_name) do
     active?(board, String.to_existing_atom(shape_name))
   end
-
   def active?(%{active_pento: %{name: shape_name}}, shape_name), do: true
   def active?(_board, _shape_name), do: false
 
