@@ -27,6 +27,15 @@ defmodule Pento.Game do
     end
   end
 
+  def is_over?(%{completed_pentos: completed_pentos, points: points}) do
+    completed_pentos_points =
+      Enum.reduce(completed_pentos, [], fn pento, acc ->
+        acc ++ Pentomino.to_shape(pento).points
+      end)
+
+    Enum.all?(points, fn point -> point in completed_pentos_points end)
+  end
+
   defp move_fn(move) do
     case move do
       :up -> &Pentomino.up/1

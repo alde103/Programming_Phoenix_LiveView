@@ -1,6 +1,5 @@
 defmodule PentoWeb.GameLive do
   use PentoWeb, :live_view
-  import PentoWeb.GameLive.Component
   alias PentoWeb.GameLive.Board
 
   def mount(%{"puzzle" => puzzle}, _session, socket) do

@@ -91,7 +91,17 @@ defmodule PentoWeb.GameLive.Board do
         put_flash(socket, :error, message)
 
       {:ok, board} ->
-        socket |> assign(board: board) |> clear_flash()
+        socket |> assign(board: board) |> check_finished_board()
+    end
+  end
+
+  defp check_finished_board(socket) do
+    case Game.is_over?(socket.assigns.board) do
+      true ->
+        put_flash(socket, :info, "You’ve Won!!!!")
+
+      false ->
+        clear_flash(socket)
     end
   end
 
