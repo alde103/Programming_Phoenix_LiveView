@@ -1,6 +1,6 @@
 defmodule Pento.Game.Pentomino do
   alias Pento.Game.{Shape, Point}
-  #@names [:i, :l, :y, :n, :p, :w, :u, :v, :s, :f, :x, :t]
+  # @names [:i, :l, :y, :n, :p, :w, :u, :v, :s, :f, :x, :t]
   @default_location {8, 8}
   defstruct name: :i,
             rotation: 0,
@@ -35,5 +35,10 @@ defmodule Pento.Game.Pentomino do
 
   def to_shape(pento) do
     Shape.new(pento.name, pento.rotation, pento.reflected, pento.location)
+  end
+
+  def overlapping?(pento1, pento2) do
+    {p1, p2} = {to_shape(pento1).points, to_shape(pento2).points}
+    Enum.count(p1 -- p2) != 5
   end
 end
